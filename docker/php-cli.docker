@@ -1,0 +1,28 @@
+FROM php:8.2-cli
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y libmcrypt-dev
+RUN apt-get install git -y
+
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install sockets
+
+# Install base extensions and libraries for GD
+RUN apt-get install -y \
+        libzip-dev \
+        zip \
+        libpng-dev \
+        libjpeg-dev \
+        libfreetype6-dev \
+        libpq-dev \
+  && docker-php-ext-install pdo
+
+# Configure GD library with required options
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+
+# Install PostgreSQL extension
+RUN docker-php-ext-install pgsql
+
+WORKDIR /var/www

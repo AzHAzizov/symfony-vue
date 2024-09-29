@@ -1,0 +1,6 @@
+FROM mysql:5.7
+
+ENTRYPOINT ["docker-entrypoint.sh", "mysqld", "--max-allowed-packet=1073741824"]
+
+# Устанавливаем рабочую директорию (если это нужно для приложения)
+WORKDIR /var/www/public
